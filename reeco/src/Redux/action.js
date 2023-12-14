@@ -12,7 +12,7 @@ let data = {
     "products": [
         {
             "id": 0,
-            "name": "Laptop",
+            "name": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. vvdoloribus laborum distinctio ipsum dolore recusandae?",
             "brand": "XYZ",
             "price": 899.99,
             "quantity": 2,
@@ -21,7 +21,7 @@ let data = {
         },
         {
             "id": 1,
-            "name": "Mouse",
+            "name": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. vvdoloribus laborum distinctio ipsum dolore recusandae?",
             "brand": "Logitech",
             "price": 24.99,
             "quantity": 3,
@@ -30,7 +30,7 @@ let data = {
         },
         {
             "id": 2,
-            "name": "Headphones",
+            "name": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. vvdoloribus laborum distinctio ipsum dolore recusandae?",
             "brand": "Sony",
             "price": 75.79,
             "quantity": 1,
