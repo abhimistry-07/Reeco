@@ -7,16 +7,11 @@ import { Check, X, Search, ChevronRight } from "lucide-react";
 
 const Table = () => {
   const [isApproved, setIsApproved] = useState("");
-  const [approvedProducts, setApprovedProducts] = useState([]);
+  const [selectedProductStatus, setSelectedProductStatus] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const dispatch = useDispatch();
   let data = useSelector((store) => store.items);
-
-  const addToApprovedProducts = () => {
-    const approvedProductIds = data?.products
-      ?.filter((item) => item.status === "Approved")
-      .map((item) => item.id);
-    setApprovedProducts(approvedProductIds);
-  };
 
   const handleApprove = (productId) => {
     const currentStatus = data.products.find(
@@ -29,10 +24,7 @@ const Table = () => {
           item.status = "Approved";
         }
       });
-
-      setApprovedProducts((prev) => [...prev, productId]);
       setIsApproved("Approved");
-    } else {
     }
 
     dispatch(updateProductStatus(data));
@@ -43,20 +35,38 @@ const Table = () => {
       (product) => product.id === productId
     )?.status;
 
+    setSelectedProductId(productId);
+
+    setSelectedProductStatus(currentStatus);
+
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmMissingModal = () => {
+    const currentStatus = data.products.find(
+      (product) => product.id === selectedProductId
+    )?.status;
+
     const newStatus =
       currentStatus === "Missing" ? "Missing – Urgent" : "Missing";
 
     data.products.map((item) => {
-      if (item.id == productId) {
+      if (item.id == selectedProductId) {
         item.status = newStatus;
       }
     });
 
-    // console.log(data,"In comp");
-
     dispatch(updateProductStatus(data));
-    setApprovedProducts((prev) => prev.filter((id) => id !== productId));
+
     setIsApproved(currentStatus === "Missing" ? "Missing – Urgent" : "Missing");
+
+    // Close the modal
+    handleCloseModal();
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProductId(null);
+    setIsModalOpen(false);
   };
 
   const getRejectIconColor = (status) => {
@@ -102,7 +112,6 @@ const Table = () => {
       status: "Approved",
     };
 
-    // console.log(newItem);
     data.products.push(newItem);
 
     dispatch(addItem(data));
@@ -110,7 +119,6 @@ const Table = () => {
 
   useEffect(() => {
     dispatch(fetchData);
-    // addToApprovedProducts();
   }, []);
 
   return (
@@ -134,7 +142,6 @@ const Table = () => {
             <AddButton>Back</AddButton>
             <ApproveButton>Approve order</ApproveButton>
           </div>
-          {/* {order.id} */}
         </SecondLine>
       </OrderInfo>
       <TableWrapper key="index">
@@ -214,7 +221,6 @@ const Table = () => {
                   <td>{product.name}</td>
                   <td>{product.brand}</td>
                   <td>
-                    {/* {product.price} */}
                     {product?.price?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
@@ -222,7 +228,6 @@ const Table = () => {
                   </td>
                   <td>{product.quantity}</td>
                   <td>
-                    {/* {product.total} */}
                     {product?.total?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
@@ -234,13 +239,6 @@ const Table = () => {
                     onClick={() => handleApprove(product.id)}
                   >
                     <Check
-                      // color={isApproved ? "Green" : "Black"}
-                      // style={{
-                      //   cursor: "pointer",
-                      //   color: approvedProducts?.includes(product.id)
-                      //     ? "green"
-                      //     : "black",
-                      // }}
                       style={{
                         cursor: "pointer",
                         color: getApproveIconColor(product.status),
@@ -261,9 +259,50 @@ const Table = () => {
           </table>
         </ProductTableWrapper>
       </Table2>
+      {isModalOpen && (
+        <>
+          <ModalWrapper className="modal">
+            <p>{`${selectedProductStatus} product`}</p>
+            <p>
+              {`Is 'Lorem, ipsum dolor ...'
+          ${
+            data.products.find((product) => product.id === selectedProductId)
+              ?.status == "Missing"
+              ? "urgent"
+              : "Missing"
+          }?`}
+            </p>
+            <button onClick={handleConfirmMissingModal}>Yes</button>
+            <button onClick={handleCloseModal}>No</button>
+          </ModalWrapper>
+        </>
+      )}
     </div>
   );
 };
+
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+  background-color: #1e633f;
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  text-align: left;
+
+  p:nth-child(1) {
+    /* color: gray;
+    font-size: 12px; */
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  p:nth-child(2) {
+  }
+`;
 
 const TableWrapper = styled.div`
   width: 90%;
