@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem, fetchData, updateProductStatus } from "../Redux/action";
 import styled from "styled-components";
 import img from "../assets/Avocado Hass.jpg";
-import { Check, X, Search } from "lucide-react";
+import { Check, X, Search, ChevronRight } from "lucide-react";
 
 const Table = () => {
   const [isApproved, setIsApproved] = useState("");
@@ -19,14 +19,21 @@ const Table = () => {
   };
 
   const handleApprove = (productId) => {
-    data.products.map((item) => {
-      if (item.id == productId) {
-        item.status = "Approved";
-      }
-    });
+    const currentStatus = data.products.find(
+      (product) => product.id === productId
+    )?.status;
 
-    setApprovedProducts((prev) => [...prev, productId]);
-    setIsApproved("Approved");
+    if (currentStatus !== "Approved") {
+      data.products.map((item) => {
+        if (item.id == productId) {
+          item.status = "Approved";
+        }
+      });
+
+      setApprovedProducts((prev) => [...prev, productId]);
+      setIsApproved("Approved");
+    } else {
+    }
 
     dispatch(updateProductStatus(data));
   };
@@ -108,21 +115,45 @@ const Table = () => {
 
   return (
     <div>
+      <OrderInfo>
+        <FirstLine>
+          <p>
+            Orders
+            <ChevronRight
+              className="chevron-icon"
+              style={{ width: "15px", margin: "0px" }}
+            />
+            Order 32457ABC
+          </p>
+        </FirstLine>
+        <SecondLine>
+          <div>
+            <p>Order 32457ABC</p>
+          </div>
+          <div>
+            <AddButton>Back</AddButton>
+            <ApproveButton>Approve order</ApproveButton>
+          </div>
+          {/* {order.id} */}
+        </SecondLine>
+      </OrderInfo>
       <TableWrapper key="index">
         <div className="invoice">
           <div className="section">
-            <p>Supplier:</p>
+            <p>
+              <strong>Supplier</strong>
+            </p>
             <p>{data.supplier}</p>
           </div>
           <div className="section">
             <p>
-              <strong>Shipping Date:</strong>
+              <strong>Shipping Date</strong>
             </p>
             <p>{data.shippingDate}</p>
           </div>
           <div className="section">
             <p>
-              <strong>Total:</strong>
+              <strong>Total</strong>
             </p>
             <p>
               {data?.total?.toLocaleString("en-US", {
@@ -133,19 +164,19 @@ const Table = () => {
           </div>
           <div className="section">
             <p>
-              <strong>Category:</strong>
+              <strong>Category</strong>
             </p>
-            <>{data.category}</>
+            <p>{data.category}</p>
           </div>
           <div className="section">
             <p>
-              <strong>Department:</strong>
+              <strong>Department</strong>
             </p>
             <p>{data.department}</p>
           </div>
           <div className="section">
             <p>
-              <strong>Status:</strong>{" "}
+              <strong>Status</strong>{" "}
             </p>
             <p>{isApproved ? "Approved" : "Awaiting your approval"}</p>
           </div>
@@ -234,9 +265,102 @@ const Table = () => {
   );
 };
 
+const TableWrapper = styled.div`
+  width: 90%;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(7, 7, 7, 0.1);
+  border: 0.1px solid rgba(7, 7, 7, 0.1);
+  border-radius: 10px;
+
+  .invoice {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* margin: 10px 25px; */
+    padding: 20px;
+  }
+
+  .section {
+    /* border: 1px solid #ddd; */
+    text-align: left;
+    padding: 10px;
+    margin: 0 5px;
+    border-left: 1px solid #ddd;
+
+    p {
+      margin: 0;
+    }
+
+    p:nth-child(1) {
+      color: gray;
+      font-size: 12px;
+    }
+
+    p:nth-child(2) {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    &:first-child {
+      border-left: none;
+    }
+  }
+`;
+
+const OrderInfo = styled.div`
+  padding: 1% 5%;
+  margin-bottom: 25px;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const FirstLine = styled.div`
+  text-align: left;
+
+  p {
+    margin: 0;
+  }
+
+  .chevron-icon {
+    vertical-align: middle;
+  }
+`;
+
+const SecondLine = styled.div`
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  padding-bottom: 0;
+
+  p {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  div:nth-child(2) {
+    display: flex;
+    align-items: center;
+  }
+`;
+
 const commonButtonStyles = `
   padding: 0.5rem 1rem;
   cursor: pointer;
+`;
+
+const ApproveButton = styled.button`
+  ${commonButtonStyles}
+  color: #ffffff;
+  background-color: #1e633f;
+  border: 1px solid #1e633f;
+  border-radius: 20px;
+  font-weight: bold;
+  margin-left: 1rem;
+
+  &:hover {
+    background-color: #ddd;
+    color: #1e633f;
+  }
 `;
 
 const AddButton = styled.button`
@@ -248,7 +372,8 @@ const AddButton = styled.button`
   margin-left: 1rem;
 
   &:hover {
-    background-color: #ddd;
+    background-color: #1e633f;
+    color: #ffffff;
   }
 `;
 
@@ -281,10 +406,8 @@ const SearchSection = styled.div`
 `;
 
 const SearchInput = styled.input`
-  /* flex: 1; */
   padding: 0.5rem;
   border: none;
-  /* border-radius: 20px; */
   width: 280px;
   outline: none;
   font-size: 16px;
@@ -297,17 +420,20 @@ const SearchInput = styled.input`
 const Table2 = styled.div`
   width: 90%;
   margin: auto;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   margin-top: 25px;
+  box-shadow: 0 4px 8px rgba(7, 7, 7, 0.1);
+  border: 0.1px solid rgba(7, 7, 7, 0.1);
+  border-radius: 10px;
 `;
 
 const ProductTableWrapper = styled.div`
   width: 95%;
   margin: auto;
   margin-top: 20px;
+  margin-bottom: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  /* overflow: hidden; */
   overflow-y: auto;
 
   table {
@@ -339,19 +465,5 @@ const ProductTableWrapper = styled.div`
     }
   }
 `;
-
-const TableWrapper = styled.div`
-  gap: 20px;
-  border: 1px solid gray;
-  padding: 10px;
-
-  .invoice {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-`;
-
-// ... other styled components ...
 
 export default Table;

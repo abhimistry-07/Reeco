@@ -27,7 +27,6 @@ export const updateProductStatus = (data) => (dispatch) => {
         .catch((error) => {
             dispatch({ type: UPDATE_PRODUCT_STATUS_FAILURE, payload: error.message });
         });
-
 }
 
 export const addItem = (item) => (dispatch) => {

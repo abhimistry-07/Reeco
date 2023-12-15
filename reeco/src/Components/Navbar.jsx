@@ -19,13 +19,14 @@ const Navbar = () => {
 };
 
 const NavbarContainer = styled.div`
-  background-color: #48dda7;
+  /* background-color: #48dda7; */
+  background-color: #1e633f;
   /* padding: 5px; */
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 80px;
+  padding: 0 65px;
 `;
 
 const LeftPart = styled.div`
