@@ -1,9 +1,5 @@
-import { ADD_ITEM, FETCH_DATA_FAILURE, FETCH_DATA_REQUEST, FETCH_DATA_SUCCESS, UPDATE_PRODUCT_STATUS } from "./actionTypes"
+import { ADD_ITEM_FAILURE, ADD_ITEM_REQUEST, ADD_ITEM_SUCCESS, FETCH_DATA_FAILURE, FETCH_DATA_REQUEST, FETCH_DATA_SUCCESS, UPDATE_PRODUCT_STATUS, UPDATE_PRODUCT_STATUS_FAILURE, UPDATE_PRODUCT_STATUS_REQUEST } from "./actionTypes"
 import axios from "axios";
-// import data from '../data.json';
-
-
-// https://reeco-qe00.onrender.com/allData
 
 export const fetchData = (dispatch) => {
 
@@ -11,7 +7,6 @@ export const fetchData = (dispatch) => {
 
     axios.get(`https://reeco-qe00.onrender.com/allData`)
         .then((res) => {
-            // console.log(res.data, ">>>>>");
             dispatch({ type: FETCH_DATA_SUCCESS, payload: res.data });
         })
         .catch((error) => {
@@ -19,17 +14,35 @@ export const fetchData = (dispatch) => {
         })
 }
 
-export const updateProductStatus = (productId, status) => (dispatch) => {
+export const updateProductStatus = (data) => (dispatch) => {
 
-    // console.log(productId, status,">>>>>>>>>");
+    dispatch({ type: UPDATE_PRODUCT_STATUS_REQUEST })
 
-    dispatch({ type: UPDATE_PRODUCT_STATUS, payload: { productId, status } })
+    axios
+        .put(`https://reeco-qe00.onrender.com/allData`, data)
+        .then((res) => {
+            // console.log(res);
+            dispatch({ type: UPDATE_PRODUCT_STATUS, payload: res.data })
+        })
+        .catch((error) => {
+            dispatch({ type: UPDATE_PRODUCT_STATUS_FAILURE, payload: error.message });
+        });
+
 }
 
 export const addItem = (item) => (dispatch) => {
     // console.log(item, ">>>>>>>");
-    dispatch({
-        type: ADD_ITEM,
-        payload: item,
-    })
+    dispatch({ type: ADD_ITEM_REQUEST });
+
+    // console.log(item, ">>>>>>");
+
+    axios.post(`https://reeco-qe00.onrender.com/allData`, item)
+        .then((res) => {
+            // console.log(res);
+            dispatch({ type: ADD_ITEM_SUCCESS, payload: res.data });
+            // dispatch(fetchData);
+        })
+        .catch((error) => {
+            dispatch({ type: ADD_ITEM_FAILURE, payload: error.message });
+        });
 };

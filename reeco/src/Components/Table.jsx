@@ -9,7 +9,7 @@ const Table = () => {
   const [isApproved, setIsApproved] = useState("");
   const [approvedProducts, setApprovedProducts] = useState([]);
   const dispatch = useDispatch();
-  const data = useSelector((store) => store.items);
+  let data = useSelector((store) => store.items);
 
   const addToApprovedProducts = () => {
     const approvedProductIds = data?.products
@@ -19,11 +19,16 @@ const Table = () => {
   };
 
   const handleApprove = (productId) => {
-    if (!approvedProducts.includes(productId)) {
-      dispatch(updateProductStatus(productId, "Approved"));
-      setApprovedProducts((prev) => [...prev, productId]);
-      setIsApproved("Approved");
-    }
+    data.products.map((item) => {
+      if (item.id == productId) {
+        item.status = "Approved";
+      }
+    });
+
+    setApprovedProducts((prev) => [...prev, productId]);
+    setIsApproved("Approved");
+
+    dispatch(updateProductStatus(data));
   };
 
   const handleReject = (productId) => {
@@ -34,7 +39,15 @@ const Table = () => {
     const newStatus =
       currentStatus === "Missing" ? "Missing – Urgent" : "Missing";
 
-    dispatch(updateProductStatus(productId, newStatus));
+    data.products.map((item) => {
+      if (item.id == productId) {
+        item.status = newStatus;
+      }
+    });
+
+    // console.log(data,"In comp");
+
+    dispatch(updateProductStatus(data));
     setApprovedProducts((prev) => prev.filter((id) => id !== productId));
     setIsApproved(currentStatus === "Missing" ? "Missing – Urgent" : "Missing");
   };
@@ -60,17 +73,32 @@ const Table = () => {
   };
 
   const handleAddItem = () => {
+    const maxID = data.products[data.products.length - 1].id;
+
+    const brands = ["Brand1", "Brand2", "Brand3", "Brand4"];
+
+    const randomBrand = brands[Math.floor(Math.random() * brands.length)];
+
+    const randomPrice = Math.floor(Math.random() * 1000) + 1;
+
+    const randomQuantity = Math.floor(Math.random() * 10) + 1;
+
+    const total = randomPrice * randomQuantity;
+
     const newItem = {
-      id: Math.random().toString(36).substring(2, 9),
-      name: "New Item",
-      brand: "Brand",
-      price: 0,
-      quantity: 1,
-      total: 0,
+      id: maxID + 1,
+      name: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. vvdoloribus laborum distinctio ipsum dolore recusandae",
+      brand: randomBrand,
+      price: randomPrice,
+      quantity: randomQuantity,
+      total: total,
       status: "Approved",
     };
 
-    dispatch(addItem(newItem));
+    // console.log(newItem);
+    data.products.push(newItem);
+
+    dispatch(addItem(data));
   };
 
   useEffect(() => {

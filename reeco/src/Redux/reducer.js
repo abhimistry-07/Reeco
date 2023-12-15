@@ -1,4 +1,4 @@
-import { ADD_ITEM, FETCH_DATA_FAILURE, FETCH_DATA_REQUEST, FETCH_DATA_SUCCESS, UPDATE_PRODUCT_STATUS } from "./actionTypes";
+import { ADD_ITEM, ADD_ITEM_FAILURE, ADD_ITEM_REQUEST, ADD_ITEM_SUCCESS, FETCH_DATA_FAILURE, FETCH_DATA_REQUEST, FETCH_DATA_SUCCESS, UPDATE_PRODUCT_STATUS } from "./actionTypes";
 
 const initState = {
     loading: false,
@@ -30,39 +30,30 @@ const reducer = (state = initState, action) => {
 
 
         case UPDATE_PRODUCT_STATUS:
-            const { productId, status } = action.payload;
-
-            // console.log(productId, status,">>>>>>>>>");
-
-            const updatedItems = {
-                ...state.items,
-                products: state.items.products.map((product) => {
-                    if (product.id === productId) {
-                        console.log("Reducer: Updating product", product.id);
-
-                        return {
-                            ...product,
-                            status: status,
-                        };
-                    }
-                    return product;
-                }),
-            };
-
-            console.log("Reducer: Updated items", updatedItems);
-
             return {
                 ...state,
-                items: updatedItems,
+                loading: false,
+                items: action.payload,
             };
 
-        case ADD_ITEM:
+        case ADD_ITEM_REQUEST:
             return {
                 ...state,
-                items: {
-                    ...state.items,
-                    products: [...state.items.products, action.payload],
-                },
+                loading: true,
+            };
+
+        case ADD_ITEM_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                items: action.payload,
+            };
+
+        case ADD_ITEM_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
             };
 
         default:
