@@ -1,29 +1,82 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchData } from "../Redux/action";
+import { addItem, fetchData, updateProductStatus } from "../Redux/action";
 import styled from "styled-components";
 import img from "../assets/Avocado Hass.jpg";
 import { Check, X, Search } from "lucide-react";
 
 const Table = () => {
-  // const [data, setData] = useState({});
-  const [isApproved, setIsApproved] = useState(false);
-  const [reload, setReload] = useState(0);
-
+  const [isApproved, setIsApproved] = useState("");
+  const [approvedProducts, setApprovedProducts] = useState([]);
   const dispatch = useDispatch();
-
   const data = useSelector((store) => store.items);
+
+  const addToApprovedProducts = () => {
+    const approvedProductIds = data?.products
+      ?.filter((item) => item.status === "Approved")
+      .map((item) => item.id);
+    setApprovedProducts(approvedProductIds);
+  };
+
+  const handleApprove = (productId) => {
+    if (!approvedProducts.includes(productId)) {
+      dispatch(updateProductStatus(productId, "Approved"));
+      setApprovedProducts((prev) => [...prev, productId]);
+      setIsApproved("Approved");
+    }
+  };
+
+  const handleReject = (productId) => {
+    const currentStatus = data.products.find(
+      (product) => product.id === productId
+    )?.status;
+
+    const newStatus =
+      currentStatus === "Missing" ? "Missing – Urgent" : "Missing";
+
+    dispatch(updateProductStatus(productId, newStatus));
+    setApprovedProducts((prev) => prev.filter((id) => id !== productId));
+    setIsApproved(currentStatus === "Missing" ? "Missing – Urgent" : "Missing");
+  };
+
+  const getRejectIconColor = (status) => {
+    switch (status) {
+      case "Missing":
+        return "orange";
+      case "Missing – Urgent":
+        return "red";
+      default:
+        return "black";
+    }
+  };
+
+  const getApproveIconColor = (status) => {
+    switch (status) {
+      case "Approved":
+        return "green";
+      default:
+        return "black";
+    }
+  };
+
+  const handleAddItem = () => {
+    const newItem = {
+      id: Math.random().toString(36).substring(2, 9),
+      name: "New Item",
+      brand: "Brand",
+      price: 0,
+      quantity: 1,
+      total: 0,
+      status: "Approved",
+    };
+
+    dispatch(addItem(newItem));
+  };
 
   useEffect(() => {
     dispatch(fetchData);
-    // setData(getData);
-  }, [reload]);
-
-  console.log(data);
-
-  // const handleApproveOrder = () => {
-  //   setIsApproved(true);
-  // };
+    // addToApprovedProducts();
+  }, []);
 
   return (
     <div>
@@ -77,9 +130,8 @@ const Table = () => {
             <div className="searchIcon">
               <Search />
             </div>
-            {/* </SearchInput> */}
           </div>
-          <AddButton>Add Item</AddButton>
+          <AddButton onClick={handleAddItem}>Add Item</AddButton>
         </SearchSection>
         <ProductTableWrapper>
           <table>
@@ -118,11 +170,31 @@ const Table = () => {
                     })}
                   </td>
                   <td>{product.status}</td>
-                  <td className="icon">
-                    <Check />
+                  <td
+                    className="icon"
+                    onClick={() => handleApprove(product.id)}
+                  >
+                    <Check
+                      // color={isApproved ? "Green" : "Black"}
+                      // style={{
+                      //   cursor: "pointer",
+                      //   color: approvedProducts?.includes(product.id)
+                      //     ? "green"
+                      //     : "black",
+                      // }}
+                      style={{
+                        cursor: "pointer",
+                        color: getApproveIconColor(product.status),
+                      }}
+                    />
                   </td>
-                  <td className="icon">
-                    <X />
+                  <td className="icon" onClick={() => handleReject(product.id)}>
+                    <X
+                      style={{
+                        cursor: "pointer",
+                        color: getRejectIconColor(product.status),
+                      }}
+                    />
                   </td>
                 </tr>
               ))}
@@ -134,13 +206,17 @@ const Table = () => {
   );
 };
 
-const AddButton = styled.button`
+const commonButtonStyles = `
   padding: 0.5rem 1rem;
+  cursor: pointer;
+`;
+
+const AddButton = styled.button`
+  ${commonButtonStyles}
   color: #1e633f;
   border: 1px solid #1e633f;
   border-radius: 20px;
   font-weight: bold;
-  cursor: pointer;
   margin-left: 1rem;
 
   &:hover {
@@ -155,7 +231,6 @@ const SearchSection = styled.div`
   width: 95%;
   align-items: center;
   padding: 0.5rem 1rem;
-  /* border: 1px solid #cb2626; */
   border-radius: 4px;
   background-color: #fff;
   margin-top: 25px;
@@ -167,7 +242,6 @@ const SearchSection = styled.div`
   div:nth-child(1) {
     display: flex;
     border: 1px solid black;
-    /* margin: auto; */
     border-radius: 50px;
     padding: 1px 20px;
 
@@ -249,5 +323,7 @@ const TableWrapper = styled.div`
     justify-content: space-between;
   }
 `;
+
+// ... other styled components ...
 
 export default Table;
