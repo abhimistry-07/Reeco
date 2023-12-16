@@ -134,6 +134,19 @@ const Table = () => {
     }
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Approved":
+        return "green";
+      case "Missing":
+        return "orange";
+      case "Missing – Urgent":
+        return "red";
+      default:
+        return "white";
+    }
+  };
+
   const handleAddItem = () => {
     const maxID = data.products[data.products.length - 1].id;
 
@@ -329,7 +342,20 @@ const Table = () => {
                       currency: "USD",
                     })}
                   </td>
-                  <td>{product.status}</td>
+                  <td style={{ textAlign: "center" }}>
+                    <Text
+                      style={{
+                        backgroundColor: getStatusColor(product.status),
+                        borderRadius: "20px",
+                        position: "relative",
+                        display: "inline-block",
+                        padding: "5px 10px",
+                        borderRadius: "20px",
+                      }}
+                    >
+                      {product.status}
+                    </Text>
+                  </td>
                   <td
                     className="icon"
                     onClick={() => handleApprove(product.id)}
