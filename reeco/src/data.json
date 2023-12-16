@@ -1,38 +1,59 @@
 {
-    "id":"0",
-    "supplier": "ABC Suppliers",
-    "shippingDate": "2023-12-14",
-    "total": 1500.75,
-    "category": "Electronics",
-    "department": "IT",
-    "status": "Shipped",
-    "products": [
+    "allData": {
+      "id": 0,
+      "supplier": "Fresh Food Market",
+      "shippingDate": "2023-12-15",
+      "total": 120.85,
+      "category": "Food",
+      "department": "Grocery",
+      "status": "Shipped",
+      "products": [
         {
-            "id": "0",
-            "name": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. vvdoloribus laborum distinctio ipsum dolore recusandae?",
-            "brand": "XYZ",
-            "price": 899.99,
-            "quantity": 2,
-            "total": 1799.98,
-            "status": "Approved"
+          "id": 1,
+          "name": "Organic Apples",
+          "brand": "Nature's Best",
+          "price": 2.99,
+          "quantity": 5,
+          "total": 14.95,
+          "status": ""
         },
         {
-            "id": "1",
-            "name": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. vvdoloribus laborum distinctio ipsum dolore recusandae?",
-            "brand": "Logitech",
-            "price": 24.99,
-            "quantity": 3,
-            "total": 74.97,
-            "status": "Missing – Urgent"
+          "id": 2,
+          "name": "Whole Grain Bread",
+          "brand": "Healthy Bakers",
+          "price": 3.49,
+          "quantity": 2,
+          "total": 6.98,
+          "status": ""
         },
         {
-            "id": "2",
-            "name": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. vvdoloribus laborum distinctio ipsum dolore recusandae?",
-            "brand": "Sony",
-            "price": 75.79,
-            "quantity": 1,
-            "total": 75.79,
-            "status": "Missing"
+          "id": 3,
+          "name": "Salmon Fillets",
+          "brand": "SeaFresh",
+          "price": 9.99,
+          "quantity": 3,
+          "total": 29.97,
+          "status": ""
+        },
+        {
+          "id": 4,
+          "name": "Organic Quinoa",
+          "brand": "SuperGrains",
+          "price": 4.50,
+          "quantity": 1,
+          "total": 4.50,
+          "status": ""
+        },
+        {
+          "id": 5,
+          "name": "Greek Yogurt",
+          "brand": "Dairy Delight",
+          "price": 2.25,
+          "quantity": 4,
+          "total": 9.00,
+          "status": ""
         }
-    ]
-}
+      ]
+    }
+  }
+  

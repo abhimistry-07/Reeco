@@ -150,7 +150,12 @@ const Table = () => {
   const handleAddItem = () => {
     const maxID = data.products[data.products.length - 1].id;
 
-    const brands = ["Brand1", "Brand2", "Brand3", "Brand4"];
+    const brands = [
+      "Farm Fresh",
+      "Pasta Paradise",
+      "Green Farms",
+      "Happy Hens",
+    ];
 
     const randomBrand = brands[Math.floor(Math.random() * brands.length)];
 
@@ -162,7 +167,7 @@ const Table = () => {
 
     const newItem = {
       id: maxID + 1,
-      name: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. vvdoloribus laborum distinctio ipsum dolore recusandae",
+      name: "Lorem, ipsum dolor sit amet consectetur adipisicing elit",
       brand: randomBrand,
       price: randomPrice,
       quantity: randomQuantity,
