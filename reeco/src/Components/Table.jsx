@@ -462,11 +462,51 @@ const Table = () => {
               : "Missing"
           }?`}
             </p>
-            <button onClick={handleConfirmMissingModal}>Yes</button>
-            <button onClick={handleCloseModal}>No</button>
+            <Button
+              mt="5"
+              colorScheme="teal"
+              onClick={handleConfirmMissingModal}
+            >
+              Yes
+            </Button>
+            <Button ml="2" mt="5" colorScheme="teal" onClick={handleCloseModal}>
+              No
+            </Button>
           </ModalWrapper>
         </>
       )}
+
+      {/* <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{`${selectedProductStatus} product`}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text fontWeight="bold" mb="1rem">
+              {`Is 'Lorem, ipsum dolor ...'
+          ${
+            data.products.find((product) => product.id === selectedProductId)
+              ?.status == "Missing"
+              ? "urgent"
+              : "Missing"
+          }?`}
+            </Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleConfirmMissingModal}
+            >
+              Yes
+            </Button>
+            <Button variant="ghost" onClick={handleCloseModal}>
+              No
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal> */}
+
       <FormControl>
         <Modal onClose={onClose} size="xl" isOpen={isOpen}>
           <ModalOverlay />
@@ -603,11 +643,16 @@ const ModalWrapper = styled.div`
   p:nth-child(1) {
     /* color: gray;
     font-size: 12px; */
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 600;
   }
 
   p:nth-child(2) {
+  }
+
+  button {
+    /* background-color: aliceblue; */
+    /* color: white; */
   }
 `;
 
