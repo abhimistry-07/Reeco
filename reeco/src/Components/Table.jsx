@@ -330,17 +330,68 @@ const Table = () => {
                   <td>{product.name}</td>
                   <td>{product.brand}</td>
                   <td>
-                    {product?.price?.toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                    })}
+                    {product?.newPrice
+                      ? product?.newPrice?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })
+                      : ""}
+                    <br />
+                    {product?.newPrice ? (
+                      <Text as="del" m="0">
+                        {product?.price?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </Text>
+                    ) : (
+                      <Text m="0">
+                        {product?.price?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </Text>
+                    )}
                   </td>
-                  <td>{product.quantity}</td>
                   <td>
-                    {product?.total?.toLocaleString("en-US", {
+                    {/* {product.quantity} */}
+                    {product?.newQuantity ? product?.newQuantity : null}
+                    <br />
+                    {product?.newQuantity ? (
+                      <Text as="del" m="0">
+                        {product.quantity}
+                      </Text>
+                    ) : (
+                      <Text m="0">{product?.quantity}</Text>
+                    )}
+                  </td>
+                  <td>
+                    {/* {product?.total?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
-                    })}
+                    })} */}
+                    {product?.newTotal
+                      ? product?.newTotal?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })
+                      : ""}
+                    <br />
+                    {product?.newTotal ? (
+                      <Text as="del" m="0">
+                        {product?.total?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </Text>
+                    ) : (
+                      <Text m="0">
+                        {product?.total?.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
+                      </Text>
+                    )}
                   </td>
                   <td style={{ textAlign: "center" }}>
                     <Text
