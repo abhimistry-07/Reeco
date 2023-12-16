@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, fetchData, updateProductStatus } from "../Redux/action";
+import {
+  addItem,
+  editPriceQuantity,
+  fetchData,
+  updateProductStatus,
+} from "../Redux/action";
 import styled from "styled-components";
 import img from "../assets/Avocado Hass.jpg";
 import { Check, X, Search, ChevronRight } from "lucide-react";
@@ -158,12 +163,36 @@ const Table = () => {
   };
 
   const handleSubmit = () => {
-    setDataToBeEdit({
-      ...dataToBeEdit,
-      newPrice: +price,
-      newQuantity: +quantity,
-      newTotal: +total,
+    let updatedData = { ...dataToBeEdit };
+
+    if (price) {
+      updatedData = { ...updatedData, newPrice: +price };
+    }
+
+    if (quantity) {
+      updatedData = { ...updatedData, newQuantity: +quantity };
+    }
+
+    if (total) {
+      updatedData = { ...updatedData, newTotal: +total };
+    }
+
+    if (reason !== "") {
+      updatedData = { ...updatedData, reason: reason };
+    }
+
+    setDataToBeEdit(updatedData);
+
+    const newData = data?.products?.map((product) => {
+      if (product.id == updatedData.id) {
+        return { ...updatedData };
+      }
+      return product;
     });
+
+    data.products = newData;
+
+    dispatch(editPriceQuantity(data));
 
     setPrice(null);
     setQuantity(null);
@@ -172,8 +201,11 @@ const Table = () => {
     onClose();
   };
 
+  // console.log(dataToBeEdit, ">>>>>>>>>>>/////");
+
   const handleReason = (e) => {
-    console.log(e.target.value);
+    setReason(e.target.value);
+    // console.log(e.target.value);
   };
 
   // console.log(dataToBeEdit);

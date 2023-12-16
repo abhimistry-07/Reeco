@@ -1,4 +1,4 @@
-import { ADD_ITEM_FAILURE, ADD_ITEM_REQUEST, ADD_ITEM_SUCCESS, FETCH_DATA_FAILURE, FETCH_DATA_REQUEST, FETCH_DATA_SUCCESS, UPDATE_PRODUCT_STATUS, UPDATE_PRODUCT_STATUS_FAILURE, UPDATE_PRODUCT_STATUS_REQUEST } from "./actionTypes"
+import { ADD_ITEM_FAILURE, ADD_ITEM_REQUEST, ADD_ITEM_SUCCESS, EDIT_ITEM_FAILURE, EDIT_ITEM_REQUEST, EDIT_ITEM_SUCCESS, FETCH_DATA_FAILURE, FETCH_DATA_REQUEST, FETCH_DATA_SUCCESS, UPDATE_PRODUCT_STATUS, UPDATE_PRODUCT_STATUS_FAILURE, UPDATE_PRODUCT_STATUS_REQUEST } from "./actionTypes"
 import axios from "axios";
 
 export const fetchData = (dispatch) => {
@@ -45,3 +45,16 @@ export const addItem = (item) => (dispatch) => {
             dispatch({ type: ADD_ITEM_FAILURE, payload: error.message });
         });
 };
+
+export const editPriceQuantity = (data) => (dispatch) => {
+
+    dispatch({ type: EDIT_ITEM_REQUEST })
+
+    axios.put(`https://reeco-qe00.onrender.com/allData`, data)
+        .then((res) => {
+            dispatch({ type: EDIT_ITEM_SUCCESS, payload: res.data });
+        })
+        .catch((error) => {
+            dispatch({ type: EDIT_ITEM_FAILURE, payload: error.message });
+        });
+}
