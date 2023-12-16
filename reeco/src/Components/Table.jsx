@@ -42,6 +42,7 @@ const Table = () => {
   const [quantity, setQuantity] = useState(null);
   const [total, setTotal] = useState(null);
   const [reason, setReason] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const dispatch = useDispatch();
   let data = useSelector((store) => store.items);
@@ -226,7 +227,13 @@ const Table = () => {
     // console.log(e.target.value);
   };
 
-  // console.log(dataToBeEdit);
+  const filteredProducts = data?.products?.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.brand.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // console.log(filteredProducts);
 
   useEffect(() => {
     dispatch(fetchData);
@@ -245,11 +252,11 @@ const Table = () => {
       <OrderInfo>
         <FirstLine>
           <p>
-            Orders
-            <ChevronRight
+            Orders >
+            {/* <ChevronRight
               className="chevron-icon"
               style={{ width: "15px", margin: "0px" }}
-            />
+            /> */}
             Order 32457ABC
           </p>
         </FirstLine>
@@ -311,7 +318,12 @@ const Table = () => {
       <Table2>
         <SearchSection>
           <div>
-            <SearchInput type="text" placeholder="Search..." />
+            <SearchInput
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
             <div className="searchIcon">
               <Search />
             </div>

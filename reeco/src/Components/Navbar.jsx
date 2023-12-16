@@ -1,11 +1,32 @@
 import React from "react";
 import styled from "styled-components";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Text,
+  Flex,
+  Image,
+  VStack,
+  HStack,
+  Spacer,
+  Box,
+} from "@chakra-ui/react";
 
 const Navbar = () => {
   return (
     <NavbarContainer>
       <LeftPart>
-        <h1>Reeco</h1>
+        <Text fontSize='4xl' as='b'>Reeco</Text>
         <NavLink href="#">Store</NavLink>
         <NavLink href="#">Orders</NavLink>
         <NavLink href="#">Analytics</NavLink>
@@ -27,6 +48,7 @@ const NavbarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 65px;
+  height: 75px;
 `;
 
 const LeftPart = styled.div`
