@@ -4,14 +4,52 @@ import { addItem, fetchData, updateProductStatus } from "../Redux/action";
 import styled from "styled-components";
 import img from "../assets/Avocado Hass.jpg";
 import { Check, X, Search, ChevronRight } from "lucide-react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Text,
+  Flex,
+  Image,
+  VStack,
+  HStack,
+  Spacer,
+  Box,
+} from "@chakra-ui/react";
 
 const Table = () => {
   const [isApproved, setIsApproved] = useState("");
   const [selectedProductStatus, setSelectedProductStatus] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [dataToBeEdit, setDataToBeEdit] = useState({});
+  const [price, setPrice] = useState(null);
+  const [quantity, setQuantity] = useState(null);
+  const [total, setTotal] = useState(null);
+  const [reason, setReason] = useState("");
+
   const dispatch = useDispatch();
   let data = useSelector((store) => store.items);
+
+  const handleEdit = (productID) => {
+    const currentData = data?.products?.find(
+      (product) => product.id === productID
+    );
+
+    setDataToBeEdit(currentData);
+
+    onOpen();
+  };
 
   const handleApprove = (productId) => {
     const currentStatus = data.products.find(
@@ -39,7 +77,9 @@ const Table = () => {
 
     setSelectedProductStatus(currentStatus);
 
-    setIsModalOpen(true);
+    if (!isModalOpen) {
+      setIsModalOpen(true);
+    }
   };
 
   const handleConfirmMissingModal = () => {
@@ -117,9 +157,33 @@ const Table = () => {
     dispatch(addItem(data));
   };
 
+  const handleSubmit = () => {
+    setDataToBeEdit({
+      ...dataToBeEdit,
+      newPrice: +price,
+      newQuantity: +quantity,
+      newTotal: +total,
+    });
+
+    setPrice(null);
+    setQuantity(null);
+    setTotal(null);
+
+    onClose();
+  };
+
+  const handleReason = (e) => {
+    console.log(e.target.value);
+  };
+
+  // console.log(dataToBeEdit);
+
   useEffect(() => {
     dispatch(fetchData);
-  }, []);
+    setTotal(price * quantity);
+  }, [price, quantity, total]);
+
+  // console.log(price, quantity, total);
 
   return (
     <div>
@@ -253,6 +317,12 @@ const Table = () => {
                       }}
                     />
                   </td>
+                  <td
+                    style={{ cursor: "pointer", fontWeight: "bold" }}
+                    onClick={() => handleEdit(product.id)}
+                  >
+                    Edit
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -277,6 +347,123 @@ const Table = () => {
           </ModalWrapper>
         </>
       )}
+      <FormControl>
+        <Modal onClose={onClose} size="xl" isOpen={isOpen}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{dataToBeEdit.name}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <Text fontSize="xl" color="gray">
+                American Roland
+              </Text>
+              <FormControl mt="4">
+                <Flex>
+                  <Image src={img} boxSize="150px" alt="American Roland" />
+                  <Spacer />
+                  <VStack w="350px">
+                    <HStack
+                      w="350px"
+                      spacing="px"
+                      justify="space-between"
+                      align="center"
+                    >
+                      <FormLabel>Price($)</FormLabel>
+                      <Input
+                        w="200px"
+                        placeholder={dataToBeEdit.price}
+                        type="number"
+                        onChange={(e) => setPrice(e.target.value)}
+                        // value={dataToBeEdit.price}
+                      />
+                    </HStack>
+                    <HStack
+                      w="350px"
+                      spacing="px"
+                      justify="space-between"
+                      align="center"
+                    >
+                      <FormLabel>Quantity</FormLabel>
+                      <Input
+                        w="200px"
+                        placeholder={dataToBeEdit.quantity}
+                        type="number"
+                        onChange={(e) => setQuantity(e.target.value)}
+                        // value={dataToBeEdit.}
+                      />
+                    </HStack>
+                    <HStack
+                      w="350px"
+                      spacing="px"
+                      justify="space-between"
+                      align="center"
+                    >
+                      <FormLabel>Total</FormLabel>
+                      <Button w="200px">
+                        {total
+                          ? total
+                          : dataToBeEdit.price * dataToBeEdit.quantity}
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </Flex>
+              </FormControl>
+              <Box>
+                <Text as="b">Choose Reason</Text>
+                <HStack mt="5">
+                  <Button
+                    bg="white"
+                    border="1px solid black"
+                    borderRadius="20px"
+                    value="Missing Product"
+                    onClick={handleReason}
+                  >
+                    Missing Product
+                  </Button>
+                  <Button
+                    bg="white"
+                    border="1px solid black"
+                    borderRadius="20px"
+                    value="Quantiy is not same"
+                    onClick={handleReason}
+                  >
+                    Quantiy is not same{" "}
+                  </Button>
+                  <Button
+                    bg="white"
+                    border="1px solid black"
+                    borderRadius="20px"
+                    value="Price is not same"
+                    onClick={handleReason}
+                  >
+                    Price is not same{" "}
+                  </Button>
+                  <Button
+                    bg="white"
+                    border="1px solid black"
+                    borderRadius="20px"
+                    value="Other"
+                    onClick={handleReason}
+                  >
+                    Other{" "}
+                  </Button>
+                </HStack>
+              </Box>
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={onClose}>Close</Button>
+              <Button
+                colorScheme="blue"
+                ml={3}
+                onClick={handleSubmit}
+                type="submit"
+              >
+                Send
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </FormControl>
     </div>
   );
 };
