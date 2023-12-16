@@ -225,7 +225,12 @@ const Table = () => {
 
   useEffect(() => {
     dispatch(fetchData);
-    setTotal(price * quantity);
+
+    if (quantity) {
+      setTotal(price * quantity);
+    } else {
+      setTotal(price * dataToBeEdit.quantity);
+    }
   }, [price, quantity, total]);
 
   // console.log(price, quantity, total);
@@ -404,7 +409,13 @@ const Table = () => {
                         borderRadius: "20px",
                       }}
                     >
-                      {product.status}
+                      {product.newPrice && product.newQuantity
+                        ? "Quantity and Price updated"
+                        : product.newPrice
+                        ? "Price Updated"
+                        : product.newQuantity
+                        ? "Quantity Updated"
+                        : product.status}
                     </Text>
                   </td>
                   <td
