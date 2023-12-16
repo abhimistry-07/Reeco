@@ -167,7 +167,7 @@ const Table = () => {
       price: randomPrice,
       quantity: randomQuantity,
       total: total,
-      status: "Approved",
+      status: "",
     };
 
     data.products.push(newItem);
