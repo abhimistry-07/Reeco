@@ -11,6 +11,7 @@ import img from "../assets/Avocado Hass.jpg";
 import { Check, X, Search, ChevronRight } from "lucide-react";
 import {
   Modal,
+  Spinner,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -46,6 +47,7 @@ const Table = () => {
 
   const dispatch = useDispatch();
   let data = useSelector((store) => store.items);
+  let loading = useSelector((store) => store.loading);
 
   const handleEdit = (productID) => {
     const currentData = data?.products?.find(
@@ -251,14 +253,12 @@ const Table = () => {
     <div>
       <OrderInfo>
         <FirstLine>
-          <p>
-            Orders >
-            {/* <ChevronRight
-              className="chevron-icon"
-              style={{ width: "15px", margin: "0px" }}
-            /> */}
-            Order 32457ABC
-          </p>
+          <p>Orders</p>
+          <ChevronRight
+            className="chevron-icon"
+            style={{ width: "15px", margin: "0px" }}
+          />
+          <p>Order 32457ABC</p>
         </FirstLine>
         <SecondLine>
           <div>
@@ -315,157 +315,172 @@ const Table = () => {
           </div>
         </div>
       </TableWrapper>
-      <Table2>
-        <SearchSection>
-          <div>
-            <SearchInput
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <div className="searchIcon">
-              <Search />
+      {loading ? (
+        <Spinner
+          mt="150px"
+          size="xl"
+          color="#1e633f"
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          // color="blue.500"
+        />
+      ) : (
+        <Table2>
+          <SearchSection>
+            <div>
+              <SearchInput
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <div className="searchIcon">
+                <Search />
+              </div>
             </div>
-          </div>
-          <AddButton onClick={handleAddItem}>Add Item</AddButton>
-        </SearchSection>
-        <ProductTableWrapper>
-          <table>
-            <thead>
-              <tr>
-                <th></th>
-                <th>Product Name</th>
-                <th>Brand</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Total</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.products?.map((product) => (
-                <tr key={product.id}>
-                  <td>
-                    <img src={img} alt="" />
-                  </td>
-                  <td>{product.name}</td>
-                  <td>{product.brand}</td>
-                  <td>
-                    {product?.newPrice
-                      ? product?.newPrice?.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })
-                      : ""}
-                    <br />
-                    {product?.newPrice ? (
-                      <Text as="del" m="0">
-                        {product?.price?.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
-                      </Text>
-                    ) : (
-                      <Text m="0">
-                        {product?.price?.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
-                      </Text>
-                    )}
-                  </td>
-                  <td>
-                    {/* {product.quantity} */}
-                    {product?.newQuantity ? product?.newQuantity : null}
-                    <br />
-                    {product?.newQuantity ? (
-                      <Text as="del" m="0">
-                        {product.quantity}
-                      </Text>
-                    ) : (
-                      <Text m="0">{product?.quantity}</Text>
-                    )}
-                  </td>
-                  <td>
-                    {/* {product?.total?.toLocaleString("en-US", {
+            <AddButton onClick={handleAddItem}>Add Item</AddButton>
+          </SearchSection>
+          <ProductTableWrapper>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Product Name</th>
+                  <th>Brand</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.products?.map((product) => (
+                  <tr key={product.id}>
+                    <td>
+                      <img src={img} alt="" />
+                    </td>
+                    <td>{product.name}</td>
+                    <td>{product.brand}</td>
+                    <td>
+                      {product?.newPrice
+                        ? product?.newPrice?.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })
+                        : ""}
+                      <br />
+                      {product?.newPrice ? (
+                        <Text as="del" m="0">
+                          {product?.price?.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })}
+                        </Text>
+                      ) : (
+                        <Text m="0">
+                          {product?.price?.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })}
+                        </Text>
+                      )}
+                    </td>
+                    <td>
+                      {/* {product.quantity} */}
+                      {product?.newQuantity ? product?.newQuantity : null}
+                      <br />
+                      {product?.newQuantity ? (
+                        <Text as="del" m="0">
+                          {product.quantity}
+                        </Text>
+                      ) : (
+                        <Text m="0">{product?.quantity}</Text>
+                      )}
+                    </td>
+                    <td>
+                      {/* {product?.total?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "USD",
                     })} */}
-                    {product?.newTotal
-                      ? product?.newTotal?.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })
-                      : ""}
-                    <br />
-                    {product?.newTotal ? (
-                      <Text as="del" m="0">
-                        {product?.total?.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
+                      {product?.newTotal
+                        ? product?.newTotal?.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })
+                        : ""}
+                      <br />
+                      {product?.newTotal ? (
+                        <Text as="del" m="0">
+                          {product?.total?.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })}
+                        </Text>
+                      ) : (
+                        <Text m="0">
+                          {product?.total?.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })}
+                        </Text>
+                      )}
+                    </td>
+                    <td style={{ textAlign: "center" }}>
+                      <Text
+                        style={{
+                          backgroundColor: getStatusColor(product.status),
+                          borderRadius: "20px",
+                          position: "relative",
+                          display: "inline-block",
+                          padding: "5px 10px",
+                          borderRadius: "20px",
+                        }}
+                      >
+                        {product.newPrice && product.newQuantity
+                          ? "Quantity and Price updated"
+                          : product.newPrice
+                          ? "Price Updated"
+                          : product.newQuantity
+                          ? "Quantity Updated"
+                          : product.status}
                       </Text>
-                    ) : (
-                      <Text m="0">
-                        {product?.total?.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
-                      </Text>
-                    )}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    <Text
-                      style={{
-                        backgroundColor: getStatusColor(product.status),
-                        borderRadius: "20px",
-                        position: "relative",
-                        display: "inline-block",
-                        padding: "5px 10px",
-                        borderRadius: "20px",
-                      }}
+                    </td>
+                    <td
+                      className="icon"
+                      onClick={() => handleApprove(product.id)}
                     >
-                      {product.newPrice && product.newQuantity
-                        ? "Quantity and Price updated"
-                        : product.newPrice
-                        ? "Price Updated"
-                        : product.newQuantity
-                        ? "Quantity Updated"
-                        : product.status}
-                    </Text>
-                  </td>
-                  <td
-                    className="icon"
-                    onClick={() => handleApprove(product.id)}
-                  >
-                    <Check
-                      style={{
-                        cursor: "pointer",
-                        color: getApproveIconColor(product.status),
-                      }}
-                    />
-                  </td>
-                  <td className="icon" onClick={() => handleReject(product.id)}>
-                    <X
-                      style={{
-                        cursor: "pointer",
-                        color: getRejectIconColor(product.status),
-                      }}
-                    />
-                  </td>
-                  <td
-                    style={{ cursor: "pointer", fontWeight: "bold" }}
-                    onClick={() => handleEdit(product.id)}
-                  >
-                    Edit
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </ProductTableWrapper>
-      </Table2>
+                      <Check
+                        style={{
+                          cursor: "pointer",
+                          color: getApproveIconColor(product.status),
+                        }}
+                      />
+                    </td>
+                    <td
+                      className="icon"
+                      onClick={() => handleReject(product.id)}
+                    >
+                      <X
+                        style={{
+                          cursor: "pointer",
+                          color: getRejectIconColor(product.status),
+                        }}
+                      />
+                    </td>
+                    <td
+                      style={{ cursor: "pointer", fontWeight: "bold" }}
+                      onClick={() => handleEdit(product.id)}
+                    >
+                      Edit
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </ProductTableWrapper>
+        </Table2>
+      )}
       {isModalOpen && (
         <>
           <ModalWrapper className="modal">
@@ -724,13 +739,15 @@ const OrderInfo = styled.div`
 
 const FirstLine = styled.div`
   text-align: left;
+  display: flex;
+  align-items: center;
 
   p {
     margin: 0;
   }
 
   .chevron-icon {
-    vertical-align: middle;
+    margin-left: 5px;
   }
 `;
 
