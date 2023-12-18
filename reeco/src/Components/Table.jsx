@@ -8,7 +8,7 @@ import {
 } from "../Redux/action";
 import styled from "styled-components";
 import img from "../assets/Avocado Hass.jpg";
-import { Check, X, Search, ChevronRight } from "lucide-react";
+import { Check, X, Search, ChevronRight, Printer } from "lucide-react";
 import {
   Modal,
   Spinner,
@@ -339,7 +339,10 @@ const Table = () => {
                 <Search />
               </div>
             </div>
-            <AddButton onClick={handleAddItem}>Add Item</AddButton>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <AddButton onClick={handleAddItem}>Add Item</AddButton>
+              <Printer style={{ color: "#1e633f", marginLeft: "50px" }} />
+            </div>
           </SearchSection>
           <ProductTableWrapper>
             <table>
@@ -808,7 +811,7 @@ const SearchSection = styled.div`
   margin: auto;
   width: 95%;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0rem;
   border-radius: 4px;
   background-color: #fff;
   margin-top: 25px;
